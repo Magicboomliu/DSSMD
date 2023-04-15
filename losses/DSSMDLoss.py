@@ -73,7 +73,7 @@ class RecoveredCleanImagesLoss(nn.Module):
         haze image: [B,3,H,W]
         airlight: [B,1]
         '''
-        airlight = airlight.unsqueeze(-1).unsqueze(-1) #[B,1,1,1]
+        airlight = airlight.unsqueeze(-1).unsqueeze(-1) #[B,1,1,1]
         
         # if transmission = 0, how to real with?
         if transmission_map.min==0:
