@@ -120,8 +120,6 @@ class DSSMMD(nn.Module):
         
 
             
-            
-            
         
     
     def forward(self,haze_left,haze_right):
@@ -297,6 +295,13 @@ if __name__=="__main__":
     
     
     # Infernece
-    model(left_input,right_input)
+    disparity_pyramid, predicted_transmission,airlght =model(left_input,right_input)
+    
+    # disparity estimation output
+    print_tensor_shape(disparity_pyramid)
+    print("-------------------")
+    print_tensor_shape(predicted_transmission)
+    print("----------------------")
+    print_tensor_shape(airlght)
     
     pass
