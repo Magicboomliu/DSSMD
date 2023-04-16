@@ -8,7 +8,6 @@ from models.UtilsNet.cost_volume import CostVolume
 from models.UtilsNet.disparity_estimation import DisparityEstimation
 from models.UtilsNet.submoudles import *
 
-
 # Deep Network for Simultaneous Stereo Matching and Dehazing.
 class DSSMMD(nn.Module):
     def __init__(self,in_channels=3,max_disp=192,dehaze_switch=False):
@@ -42,7 +41,6 @@ class DSSMMD(nn.Module):
         self.iconv1_sm = nn.ConvTranspose2d(64,32, 3, 1, 1)
         self.iconv0_sm = nn.ConvTranspose2d(19,16, 3, 1, 1)
         
-        
         if self.dehaze_switch:
             self.upconv5_sm = deconv(512+512, 256)
         else:
@@ -53,7 +51,6 @@ class DSSMMD(nn.Module):
         self.upconv2_sm = deconv(64, 32)
         self.upconv1_sm = deconv(32,32) # Note there is 32 dimension
         self.upconv0_sm = deconv(32,16)
-        
         
         # disparity estimation 
         self.disp3 = nn.Conv2d(64,1,kernel_size=3,stride=1,padding=1,bias=False)
@@ -68,11 +65,9 @@ class DSSMMD(nn.Module):
         self.residual_submodule_0 = res_submodule(scale=0,value_planes=16,out_planes=16)
         
         
-        
         if self.dehaze_switch:
             
             '''  Tranmission Estimation Branch       '''
-            
             self.conv1_trans = conv(3,32,7,2) # 1/2
             self.conv2_trans = ResBlock(32,64,stride=2) # 1/4
             self.conv3_trans = ResBlock(64,128,stride=2) #1/8
@@ -84,7 +79,6 @@ class DSSMMD(nn.Module):
             self.conv6_trans = ResBlock(256, 512, stride=2)          # 1/64
             self.conv6_1_trans = ResBlock(512, 512)
             
-            
             # upsample
             self.iconv5_trans = nn.ConvTranspose2d(512, 256, 3, 1, 1)
             self.iconv4_trans = nn.ConvTranspose2d(384, 128, 3, 1, 1)
@@ -92,7 +86,6 @@ class DSSMMD(nn.Module):
             self.iconv2_trans = nn.ConvTranspose2d(96,32, 3, 1, 1)
             self.iconv1_trans = nn.ConvTranspose2d(64,32, 3, 1, 1)
             self.iconv0_trans = nn.ConvTranspose2d(19,16, 3, 1, 1)
-            
             
             self.upconv5_trans = deconv(512+512, 256)
             self.upconv4_trans = deconv(256, 128)
@@ -119,11 +112,11 @@ class DSSMMD(nn.Module):
             )
         
 
-            
-        
     
     def forward(self,haze_left,haze_right):
         
+        haze_left = haze_left.float()
+        haze_right = haze_right.float()
         # Stereo Matching Branch
         conv1_l_sm = self.conv1_sm(haze_left)          # 32 1/2
         conv2_l_sm = self.conv2_sm(conv1_l_sm)           # 64 1/4
@@ -166,14 +159,11 @@ class DSSMMD(nn.Module):
             conv6b_trans = self.conv6_1_trans(conv6a_trans)       # 512 1/64
             
 
-            
-
-
-
         # The stereo matching branch decoder.
         if self.dehaze_switch:
             transmision_stereo_fusion = torch.cat((conv6b_sm,conv6b_trans),dim=1)
             upconv5_sm = self.upconv5_sm(transmision_stereo_fusion)      # 256 1/32
+        
         else:
             upconv5_sm = self.upconv5_sm(conv6b_sm)      # 256 1/32        
         concat5_sm = torch.cat((upconv5_sm,conv5b_sm),dim=1)
@@ -201,7 +191,6 @@ class DSSMMD(nn.Module):
         disp2 = disp2 + res2
         disp2 = self.relu2(disp2)
         
-            
         # 1/2 disparity estimation
         upconv1_sm = self.upconv1_sm(iconv2_sm) # 32 1/2
         concat1_sm = torch.cat((upconv1_sm,conv1_l_sm),dim=1) # 32+32 = 64
@@ -210,7 +199,6 @@ class DSSMMD(nn.Module):
         res1 = self.residual_submodule_1(haze_left, haze_right, disp1, iconv1_sm)
         disp1 = disp1 + res1
         disp1 = self.relu1(disp1)
-        
         
         # full disparity estimation
         upconv0_sm = self.upconv0_sm(iconv1_sm) # 16 1/2
@@ -222,11 +210,8 @@ class DSSMMD(nn.Module):
         disp0 = self.relu0(disp0)
         
         
-        
         # dehazing branch decoder.
-
-        if self.dehaze_switch:
-        
+        if self.dehaze_switch: 
             upconv5_trans = self.upconv5_trans(transmision_stereo_fusion)      # 256 1/32        
             concat5_trans = torch.cat((upconv5_trans,conv5b_trans),dim=1)
             iconv5_trans = self.iconv5_trans(concat5_trans)       # 256

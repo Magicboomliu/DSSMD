@@ -21,7 +21,7 @@ class Disparity_Loss(nn.Module):
         if isinstance(predicted_disparity_pyramid,list) or isinstance(predicted_disparity_pyramid,tuple):
             for idx, predicted_disp in enumerate(predicted_disparity_pyramid):
                 scale = gt_disparity.shape[-1]//predicted_disp.shape[-1]
-                cur_gt_disparity = F.interpolate(cur_gt_disparity,scale_factor=1./scale,mode='bilinear',align_corners=False)*1.0/scale
+                cur_gt_disparity = F.interpolate(gt_disparity,scale_factor=1./scale,mode='bilinear',align_corners=False)*1.0/scale
                 assert predicted_disp.shape[-1]==cur_gt_disparity.shape[-1]
                 cur_loss = self.disp_loss(predicted_disp,cur_gt_disparity)
                 total_loss+=self.weights[idx] * cur_loss
@@ -36,13 +36,16 @@ class Disparity_Loss(nn.Module):
 # Transmission Map Loss.
 class TransmissionMap_Loss(nn.Module):
     def __init__(self,type='smooth_l1'):
-        super().__init__()
-        self.trans_loss_type =type
-        if self.trans_loss_type=='smooth_l1':
-            self.trans_loss = nn.SmoothL1Loss(size_average=True,reduction='mean')
-            
+        super(TransmissionMap_Loss,self).__init__()
+        # self.trans_loss_type =type
+        # if self.trans_loss_type=='smooth_l1':
+        #     self.trans_loss = nn.SmoothL1Loss(size_average=True,reduction='mean')
+        self.loss = nn.SmoothL1Loss(size_average=True,reduction='mean')
+
     def foward(self,predict_tranmission_map,gt_transmission_map):
-        return self.trans_loss(predict_tranmission_map,gt_transmission_map)
+        loss = self.loss(predict_tranmission_map,gt_transmission_map)
+        
+        return loss
         
 
 

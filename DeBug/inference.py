@@ -128,7 +128,7 @@ def depth2trans(depth,beta):
     assert beta.shape[0]==b
     beta = beta.view(b,1,1,1)
     
-    norm_depth = depth.repeat(1,3,1,1) #[B,3,H,W]
+    norm_depth = depth #[B,3,H,W]
     transmission = torch.exp(-norm_depth*beta)
     
     return transmission
