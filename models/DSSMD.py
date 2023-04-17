@@ -269,17 +269,18 @@ if __name__=="__main__":
     right_input = torch.abs(torch.randn(8,3,320,640)).cuda()
     
     
-    model = DSSMMD(in_channels=3,dehaze_switch=True).cuda()
+    model = DSSMMD(in_channels=3,dehaze_switch=False).cuda()
     
     
     # Infernece
-    disparity_pyramid, predicted_transmission,airlght =model(left_input,right_input)
+    # disparity_pyramid, predicted_transmission,airlght =model(left_input,right_input)
     
+    disparity_pyramid =model(left_input,right_input)
     # disparity estimation output
     print_tensor_shape(disparity_pyramid)
-    print("-------------------")
-    print_tensor_shape(predicted_transmission)
-    print("----------------------")
-    print_tensor_shape(airlght)
+    # print("-------------------")
+    # print_tensor_shape(predicted_transmission)
+    # print("----------------------")
+    # print_tensor_shape(airlght)
     
-    pass
+    # pass

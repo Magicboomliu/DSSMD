@@ -15,49 +15,25 @@ from dataloader.preprocess import scale_disp
 from utils.metric import P1_metric,P1_Value,D1_metric,Disparity_EPE_Loss
 from utils.visual import save_images,disp_error_img
 # Loading the Nework Architecture
-from models.DSSMD import DSSMMD
+from models.FFA import FFA
+
 from DeBug.inference import convert_disp_to_depth,convert_depth_to_disp,recover_depth,recover_clear_images,recover_haze_images,depth2trans,trans2depth
 from losses.DSSMDLoss import Disparity_Loss,TransmissionMap_Loss,Airlight_Loss,RecoveredCleanImagesLoss
 import os
 import time
-from utils.metric import P1_metric,P1_Value,D1_metric,Disparity_EPE_Loss
-from utils.visual import save_images,disp_error_img
 
 img2mse = lambda x, y : torch.mean((x - y) ** 2)
 mse2psnr = lambda x : -10. * torch.log(x) / torch.log(torch.Tensor([10.]).type_as(x))
 
 # Keys 
-complete_data=['clear_left_image','clear_right_image','left_disp','right_disp',
+complete_data=['clear_left_image','left_disp',
                     'focal_length','baseline','beta','airlight']
-
-
-
-        
-def RecoveredCleanFromTrans(transmission_map,airlight,haze_image):
-    
-    '''
-    transmision: [B,1,H,W]
-    haze image: [B,3,H,W]
-    airlight: [B,1]
-    '''
-    airlight = airlight.unsqueeze(-1).unsqueeze(-1) #[B,1,1,1]
-    
-    # if transmission = 0, how to real with?
-    if transmission_map.min==0:
-        recovered_clean = (haze_image-airlight*(1-transmission_map))/(transmission_map+1e-4)
-    else:
-        recovered_clean = (haze_image-airlight*(1-transmission_map))/(transmission_map)
-        
-    recovered_clean = torch.clamp(recovered_clean,min=0,max=1.0)
-    
-    return recovered_clean
-
 
 
 class DisparityTrainer(object):
     def __init__(self, lr, devices, dataset, trainlist, vallist, datapath, 
                  batch_size, maxdisp,use_deform=False, pretrain=None, 
-                        model='DSSMD', test_batch=4,initial_pretrain=None):
+                        model='FFANet', test_batch=4,initial_pretrain=None):
         super(DisparityTrainer, self).__init__()
         
         self.lr = lr
@@ -77,14 +53,14 @@ class DisparityTrainer(object):
         self.maxdisp = maxdisp
         self.use_deform= use_deform
         self.criterion = None
-        self.epe = Disparity_EPE_Loss
-        self.p1_error = P1_metric
         self.model = model
         self.initialize()
+        
     # Get Dataset Here
     def _prepare_dataset(self):
         if self.dataset == 'sceneflow':
-            train_transform_list = [complex_transforms.RandomCrop(320, 640),
+            train_transform_list = [complex_transforms.RandomCrop(320,400),
+                                    complex_transforms.RandomVerticalFlip(),
                             complex_transforms.ToTensor()
                             ]
             train_transform =complex_transforms.Compose(train_transform_list)
@@ -118,8 +94,8 @@ class DisparityTrainer(object):
 
     def _build_net(self):
         # Build the Network architecture according to the model name
-        if self.model == 'DSSMD':
-            self.net = DSSMMD(dehaze_switch=True,in_channels=3)
+        if self.model == 'FFANet':
+            self.net = FFA(gps=3,blocks=19)
         else:
             raise NotImplementedError
         
@@ -161,14 +137,7 @@ class DisparityTrainer(object):
                                         betas=(momentum, beta), amsgrad=True)
 
     def _set_loss_function(self):
-        
-        self.disp_loss = Disparity_Loss(type='smooth_l1',weights=[0.6,0.8,1.0,1.0])
-        
-        self.transmission_loss = TransmissionMap_Loss(type='smooth_l1')
-        
-        self.airlight_loss = Airlight_Loss(type='l1_loss')
-        
-        self.recovered_left_loss = RecoveredCleanImagesLoss(type='normal')
+        self.recover_loss = nn.L1Loss(size_average=True,reduction='mean')
 
 
     def initialize(self):
@@ -179,7 +148,7 @@ class DisparityTrainer(object):
 
     def adjust_learning_rate(self, epoch):
         if epoch>=0 and epoch<=10:
-            cur_lr = 3e-4
+            cur_lr = 2e-4
         elif epoch > 10 and epoch<45:
             cur_lr = 1e-4
         elif epoch>=40 and epoch<50:
@@ -190,7 +159,6 @@ class DisparityTrainer(object):
             cur_lr =1.5e-5
         else:
             cur_lr = self.lr
-
         for param_group in self.optimizer.param_groups:
             param_group['lr'] = cur_lr
         self.current_lr = cur_lr
@@ -207,17 +175,8 @@ class DisparityTrainer(object):
         # Loss Function Designer
         losses_meter = AverageMeter()
         
-        disp_loss_meter = AverageMeter()
-        transmision_loss_meter = AverageMeter()
-        
-        airlight_loss_meter = AverageMeter()
-        recovered_rgb_loss_meter = AverageMeter()
-        
-        disp_EPEs = AverageMeter()
-        psnr_meters = AverageMeter()
-
-
         # PSNR
+        psnr_meter = AverageMeter()
         nums_samples = len(self.train_loader)
         train_count = 0
         
@@ -233,111 +192,61 @@ class DisparityTrainer(object):
         
         
         for i_batch, sample_batched in enumerate(self.train_loader):
-            # clear left 
-            # clear right
-            # target disp
-            # beta
-            # airlight
-            # baseline
-            # focal length 
-
             clear_left = torch.autograd.Variable(sample_batched['clear_left_image'].cuda(), requires_grad=False)
-            clear_right = torch.autograd.Variable(sample_batched['clear_right_image'].cuda(), requires_grad=False)
             target_disp_left = torch.autograd.Variable(sample_batched['left_disp'].cuda(), requires_grad=False).unsqueeze(1)
-            target_disp_right = torch.autograd.Variable(sample_batched['right_disp'].cuda(), requires_grad=False).unsqueeze(1)
             focal_length = torch.autograd.Variable(sample_batched['focal_length'].cuda(), requires_grad=False)
             baseline = torch.autograd.Variable(sample_batched['baseline'].cuda(), requires_grad=False)
             beta = torch.autograd.Variable(sample_batched['beta'].cuda(), requires_grad=False)
             airlight = torch.autograd.Variable(sample_batched['airlight'].cuda(), requires_grad=False)
             
             left_depth = convert_disp_to_depth(baseline=baseline,focal_length=focal_length,disp=target_disp_left)
-            right_depth = convert_disp_to_depth(baseline=baseline,focal_length=focal_length,disp=target_disp_right)
             left_trans = depth2trans(left_depth,beta=beta)
-            # right_trans = depth2trans(right_depth,beta=beta)
             
             haze_left = recover_haze_images(clean_images=clear_left,beta=beta,A=airlight,depth=left_depth)
-            haze_right = recover_haze_images(clean_images=clear_right,beta=beta,A=airlight,depth=right_depth)
-            # get left trans and right trans
-            # generate left haze image and right haze image.
             
             haze_left = haze_left.float()
-            haze_right = haze_right.float()
             target_disp_left = target_disp_left.float()
-            target_disp_right = target_disp_right.float()
             focal_length = focal_length.float()
             airlight = airlight.float()
             beta = beta.float()
             left_depth = left_depth.float()
-            right_depth = right_depth.float()
             left_trans = left_trans.float()
         
             data_time.update(time.time() - end)
             self.optimizer.zero_grad()
 
             # Inference Here 
-            if self.model =="DSSMD":
-                # get the disparity and 
-                disparity_pyramid, predicted_transmission,predicted_airlight = self.net(haze_left,haze_right)
-                disparity_output = disparity_pyramid[-1]
-                
-                dehazed_left = RecoveredCleanFromTrans(transmission_map=predicted_transmission,
-                                                       airlight=predicted_airlight,
-                                                       haze_image=haze_left)
+            if self.model =="FFANet":
+                # get the disparity and
+                dehaze_image = self.net(haze_left) 
             
             # Disparity Loss: Target Disparity
-            disp_loss =self.disp_loss(disparity_pyramid,target_disp_left)
-            # Predicted Transmission.
-
-            transmission_loss = F.smooth_l1_loss(predicted_transmission,left_trans,size_average=True) 
-            # Predicted Airlight.
-            airlight_loss = self.airlight_loss(predicted_airlight,airlight)
-            # recovered disparity loss
-            # transmission_map,airlight,haze_image,clean_image
-            recovered_loss = self.recovered_left_loss(predicted_transmission,predicted_airlight,haze_left,clear_left)
-            # Total Loss
-            disp_loss = disp_loss.float()
-            transmission_loss = transmission_loss.float()
-            airlight_loss = airlight_loss.float()
-            recovered_loss = recovered_loss.float()
-            total_loss = disp_loss*2.0 + transmission_loss*1.0 + airlight_loss*1.0 + recovered_loss*0.8
+            recover_loss = self.recover_loss(dehaze_image,clear_left)
+            total_loss = recover_loss
             total_loss = total_loss.float()
-            
+
             
             # Evaluation 
-            disp_epe = self.epe(disparity_output,target_disp_left)
-            img_loss = img2mse(dehazed_left,clear_left)
+            # disp_epe = self.epe(disparity_output,target_disp_left)
+            img_loss = img2mse(dehaze_image,clear_left)
             psnr = mse2psnr(img_loss)
             
             
             losses_meter.update(total_loss.data.item(),clear_left.size(0))
-            disp_EPEs.update(disp_epe.data.item(),clear_left.size(0))
-            disp_loss_meter.update(disp_loss.data.item(),clear_left.size(0))
-            transmision_loss_meter.update(transmission_loss.data.item(),clear_left.size(0))
-            airlight_loss_meter.update(airlight_loss.data.item(),clear_left.size(0))
-            recovered_rgb_loss_meter.update(recovered_loss.data.item(),clear_left.size(0))
-            psnr_meters.update(psnr.data.item(),clear_left.size(0))            
+            psnr_meter.update(psnr.data.item(),clear_left.size(0))            
 
             
             summary_writer.add_scalar("Total_loss",losses_meter.val,iterations+1)
-            summary_writer.add_scalar("Disp Loss Meter",disp_loss_meter.val,iterations+1)
-            summary_writer.add_scalar("Transmission Meter",transmision_loss_meter.val,iterations+1)
-            summary_writer.add_scalar("Airlight loss Meter",airlight_loss_meter.val,iterations+1)
-            summary_writer.add_scalar("Disp Loss",disp_EPEs.val,iterations+1)
-            summary_writer.add_scalar("Recovered PSNR",psnr_meters.val,iterations+1)
+            summary_writer.add_scalar("PSNR",psnr_meter.val,iterations+1)
 
 
             # Save Some Images
             if i_batch in [0,nums_samples//2,nums_samples//4*3]:
-                pred_disp = disparity_output.squeeze(1).detach()
-                gt_disp = target_disp_left.squeeze(1).detach()
 
                 img_summary = dict()
-                img_summary['disp_error'] = disp_error_img(pred_disp, gt_disp)
-                img_summary['left'] = haze_left.detach()
-                img_summary['right'] = haze_left.detach()
-                img_summary['gt_disp'] = gt_disp.detach()
-                img_summary['pred_disp'] = pred_disp.detach()
-                img_summary['dehaze_img'] = dehazed_left.detach()
+                img_summary['Haze_left'] = haze_left.detach()
+                img_summary['clear_left'] = clear_left.detach()
+                img_summary['dehaze_left'] = dehaze_image.detach()
 
                 save_images(summary_writer, 'train' + str(train_count), img_summary, epoch)
                 train_count = train_count +1
@@ -359,32 +268,23 @@ class DisparityTrainer(object):
                 'Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t'
                 'Data {data_time.val:.3f} ({data_time.avg:.3f})\t'
                 'Loss {loss.val:.3f} ({loss.avg:.3f})\t'
-                'Disp_Loss {disp_loss.val:.3f} ({disp_loss.avg:.3f})\t'
-                'transmission_loss {transmission_l.val:.3f} ({transmission_l.avg:.3f})\t'
-                'airlight_loss {airlight_l.val:.3f} ({airlight_l.avg:.3f})\t'
-                'recovered_loss {recover_l.val:.3f} ({recover_l.avg:.3f})\t'
-                'Disp_EPE {flow2_EPE.val:.3f} ({flow2_EPE.avg:.3f})\t'
-                'PSNR {psnrs.val:.3f} ({psnrs.avg:.3f})\t'
+                'PSNR {psnr_m.val:.3f} ({psnr_m.avg:.3f})\t'
                 .format(
                 epoch, i_batch, self.num_batches_per_epoch, 
                 batch_time=batch_time,
-                disp_loss = disp_loss_meter,
-                transmission_l = transmision_loss_meter,
-                airlight_l = airlight_loss_meter,
-                recover_l = recovered_rgb_loss_meter,
-                data_time=data_time, loss=losses_meter,flow2_EPE=disp_EPEs,
-                psnrs=psnr_meters))
+                loss  = losses_meter,
+                psnr_m = psnr_meter,
+                data_time=data_time))
 
 
-        return losses_meter.avg, disp_EPEs.avg,iterations
+        return losses_meter.avg, psnr_meter.avg,iterations
     
 
     # Validation One Epoch
     def validate(self,summary_writer,epoch,vis=False):
           
         batch_time = AverageMeter()
-        flow2_EPEs = AverageMeter()
-        P1_errors = AverageMeter()
+
         psnr_meters = AverageMeter()
         
         # switch to evaluate mode
@@ -399,91 +299,69 @@ class DisparityTrainer(object):
             
     
             clear_left = torch.autograd.Variable(sample_batched['clear_left_image'].cuda(), requires_grad=False)
-            clear_right = torch.autograd.Variable(sample_batched['clear_right_image'].cuda(), requires_grad=False)
             target_disp_left = torch.autograd.Variable(sample_batched['left_disp'].cuda(), requires_grad=False).unsqueeze(1)
-            target_disp_right = torch.autograd.Variable(sample_batched['right_disp'].cuda(), requires_grad=False).unsqueeze(1)
             focal_length = torch.autograd.Variable(sample_batched['focal_length'].cuda(), requires_grad=False)
             baseline = torch.autograd.Variable(sample_batched['baseline'].cuda(), requires_grad=False)
             beta = torch.autograd.Variable(sample_batched['beta'].cuda(), requires_grad=False)
             airlight = torch.autograd.Variable(sample_batched['airlight'].cuda(), requires_grad=False)
             
             left_depth = convert_disp_to_depth(baseline=baseline,focal_length=focal_length,disp=target_disp_left)
-            right_depth = convert_disp_to_depth(baseline=baseline,focal_length=focal_length,disp=target_disp_right)
-            left_trans = depth2trans(left_depth,beta=beta)
-            # right_trans = depth2trans(right_depth,beta=beta)
-            
             left_depth_l = F.interpolate(left_depth,size=[clear_left.shape[-2],clear_left.shape[-1]],mode='bilinear',
                                          align_corners=False)
-            right_depth_l = F.interpolate(right_depth,size=[clear_left.shape[-2],clear_left.shape[-1]],mode='bilinear',
-                                         align_corners=False)
+            
+            left_trans = depth2trans(left_depth,beta=beta)
             haze_left = recover_haze_images(clean_images=clear_left,beta=beta,A=airlight,depth=left_depth_l)
-            haze_right = recover_haze_images(clean_images=clear_right,beta=beta,A=airlight,depth=right_depth_l)
 
             haze_left = haze_left.float()
-            haze_right = haze_right.float()
             target_disp_left = target_disp_left.float()
-            target_disp_right = target_disp_right.float()
             focal_length = focal_length.float()
             airlight = airlight.float()
             beta = beta.float()
             left_depth = left_depth.float()
-            right_depth = right_depth.float()
             left_trans = left_trans.float()
 
         
             with torch.no_grad():
                 start_time = time.perf_counter()
                 # Get the predicted disparity
-                if self.model=="DSSMD":
-                    disparity_pyrmaid,pred_trans,pred_airlght = self.net(haze_left,haze_right)
-                    output = disparity_pyrmaid[-1]
-                    # output = self.net(haze_left,haze_right)
-                    output = scale_disp(output, (output.size()[0], self.img_height, self.img_width))  
+                if self.model=="FFANet":
+                    dehaze_image = self.net(haze_left)
 
-                    dehazed_left = RecoveredCleanFromTrans(transmission_map=pred_trans,airlight=pred_airlght,
-                                                                            haze_image=haze_left)
                     
                 inference_time += time.perf_counter() - start_time
                 img_nums += haze_left.shape[0]
-                flow2_EPE = self.epe(output, target_disp_left)
-                P1_error = self.p1_error(output, target_disp_left)
-                img_loss = img2mse(dehazed_left,clear_left)
+
+                img_loss = img2mse(dehaze_image,clear_left)
                 psnr = mse2psnr(img_loss)
                 
-            if flow2_EPE.data.item() == flow2_EPE.data.item():
-                flow2_EPEs.update(flow2_EPE.data.item(), haze_left.size(0))
-            if P1_error.data.item() == P1_error.data.item():
-                P1_errors.update(P1_error.data.item(), haze_left.size(0))
-                psnr_meters.update(psnr.data.item(),haze_left.size(0))
+ 
+            psnr_meters.update(psnr.data.item(),haze_left.size(0))
 
             # measure elapsed time
             batch_time.update(time.time() - end)
             end = time.time()
             
             if i % 10 == 0:
-                logger.info('Test: [{0}/{1}]\t Time {2}\t EPE {3}\t PSNR {3}\t '
-                      .format(i, len(self.test_loader), batch_time.val, flow2_EPEs.val,psnr_meters.val))
+                logger.info('Test: [{0}/{1}]\t Time {2}\t PSNR {3}\t '
+                      .format(i, len(self.test_loader), batch_time.val, psnr_meters.val))
             
 
             if i in [0,nums_samples//2,nums_samples//4*3]:
-                pred_disp = output.squeeze(1).detach()
-                gt_disp = target_disp_left.squeeze(1).detach()
-
                 img_summary = dict()
-                img_summary['disp_error'] = disp_error_img(pred_disp, gt_disp)
-                img_summary['left'] = haze_left.detach()
-                img_summary['right'] = haze_right.detach()
-                img_summary['gt_disp'] = gt_disp.detach()
-                img_summary['pred_disp'] = pred_disp.detach()
-                img_summary['dehaze_left'] = dehazed_left.detach()
+                img_summary['Haze_left'] = haze_left.detach()
+                img_summary['clear_left'] = clear_left.detach()
+                img_summary['dehaze_left'] = dehaze_image.detach()
+                img_summary = dict()
+           
+
+                # img_summary['dehaze_left'] = dehazed_left.detach()
                 save_images(summary_writer, 'test' + str(test_count), img_summary, epoch)
                 test_count = test_count +1
                 
-        logger.info(' * PSNR {:.3f}'.format(psnr_meters.avg))
-        logger.info(' * DISP EPE {:.3f}'.format(flow2_EPEs.avg))
-        logger.info(' * P1_error {:.3f}'.format(P1_errors.avg))
+        # logger.info(' * PSNR {:.3f}'.format(psnr_meters.avg))
+        logger.info(' * PSNR meter {:.3f}'.format(psnr_meters.avg))
         logger.info(' * avg inference time {:.3f}'.format(inference_time / img_nums))
-        return flow2_EPEs.avg
+        return psnr_meters.avg
 
 
     def get_model(self):
