@@ -24,6 +24,10 @@ from dataloader.preprocess import scale_disp
 complete_data=['clear_left_image','clear_right_image','left_disp','right_disp',
                                                   'focal_length','baseline','beta','airlight']
 
+img2mse = lambda x, y : torch.mean((x - y) ** 2)
+mse2psnr = lambda x : -10. * torch.log(x) / torch.log(torch.Tensor([10.]).type_as(x))
+
+
 # SceneFlow dataset
 def prepare_dataset(file_path,train_list,val_list):
     test_batch =1
@@ -172,11 +176,48 @@ from utils.AverageMeter import AverageMeter
 from utils.common import logger, check_path, write_pfm,count_parameters
 
 
+def compute_the_psnr(dehaze_image,original_image):
+    img_loss = img2mse(dehaze_image,original_image)
+    psnr = mse2psnr(img_loss)
+    return psnr
+
+def L1_Loss(pred,ground_truth):
+    
+    b,c,h,w = pred.shape
+    diff = torch.abs(pred-ground_truth)
+    
+    l1_error = diff.sum()/(h*w*b*c)
+    
+    return l1_error
+
+def L1_Loss_s(pred,ground_truth):
+    
+    b,c = pred.shape
+    diff = torch.abs(pred-ground_truth)
+    
+    l1_error = diff.sum()/(b*c)
+    
+    return l1_error
+    
 # Evaluation Here
+def saved_json(outputs,foldername):
+    import json
+    if not os.path.exists(foldername):
+        os.makedirs(foldername)
+    sub_folder = os.path.join(foldername,"metrics")
+    if not os.path.exists(sub_folder):
+        os.makedirs(sub_folder)
+    if isinstance(outputs,dict):
+        with open(os.path.join(sub_folder,"outcome.json"),'w') as f:
+            json.dump(outputs,f,indent=4) 
+
 import skimage.io
 if __name__=="__main__":
     
-    root_files = "DSSMD_Results"
+    
+
+    
+    root_files = "DSSMD_Results2"
     gt_disp_path = os.path.join(root_files,'gt_disp')
     haze_left_images_path = os.path.join(root_files,"haze_left")
     haze_right_images_path = os.path.join(root_files,"haze_right")
@@ -187,6 +228,7 @@ if __name__=="__main__":
     predicted_disparity_path = os.path.join(root_files,'predicted_disparity')
     predicted_trans_path = os.path.join(root_files,"predicted_trans")
     
+    saved_metris = os.path.join(root_files,'metric')
 
     # make new files
     if not os.path.exists(root_files):
@@ -209,6 +251,9 @@ if __name__=="__main__":
         os.makedirs(gt_disp_path)
     if not os.path.exists(predicted_trans_path):
         os.makedirs(predicted_trans_path)
+    
+    if not os.path.exists(saved_metris):
+        os.makedirs(saved_metris)
         
     
 
@@ -218,6 +263,7 @@ if __name__=="__main__":
     airlight_L1_meter = AverageMeter()
     recovered_rgb_L1_meter = AverageMeter()
     disp_EPEs = AverageMeter()
+    P1_meter = AverageMeter()
     psnr_meters = AverageMeter()
     
 
@@ -229,7 +275,7 @@ if __name__=="__main__":
     
     pretrained_net = torch.nn.DataParallel(pretrained_net, device_ids=[0]).cuda()
     
-    pretrained_path = "/home/zliu/Desktop/StereoDehazing_Reimp/DSSMD/models_saved/simplenet_0_20_2.172.pth"
+    pretrained_path = "/home/zliu/Desktop/StereoDehazing_Reimp/DSSMD/DSSMD_Mix.pth"
     ckpt = torch.load(pretrained_path)
     
     pretrained_net.load_state_dict(ckpt["state_dict"])
@@ -306,28 +352,43 @@ if __name__=="__main__":
             output = scale_disp(output, (output.size()[0], 540, 960))
             error_maps = disp_error_img(output.squeeze(1),left_disp.squeeze(1))
             
-        
-        # to visible numpys
-        if i%50==0:
-            predicted_disparity_vis = output.squeeze(0).squeeze(0).cpu().numpy()
-            gt_disparity_left_vis = left_disp.squeeze(0).squeeze(0).cpu().numpy()
-            left_image_vis = haze_left.squeeze(0).permute(1,2,0).cpu().numpy()
-            right_image_vis = haze_right.squeeze(0).permute(1,2,0).cpu().numpy()
-            clear_left_vis = clear_left_image.squeeze(0).permute(1,2,0).cpu().numpy()
-            clear_right_vis = clear_right_image.squeeze(0).permute(1,2,0).cpu().numpy()
-            deahze_left_vis = dehaze_image.squeeze(0).permute(1,2,0).cpu().numpy()
-            error_maps_vis = error_maps.squeeze(0).permute(1,2,0).cpu().numpy()
-            predicted_trans_vis = pred_trans.squeeze(0).permute(1,2,0).cpu().numpy()
             
-            skimage.io.imsave(os.path.join(predicted_disparity_path,'{}.png'.format(i)),predicted_disparity_vis)
-            skimage.io.imsave(os.path.join(gt_disp_path,'{}.png'.format(i)),gt_disparity_left_vis)
-            skimage.io.imsave(os.path.join(haze_left_images_path,'{}.png'.format(i)),left_image_vis)
-            skimage.io.imsave(os.path.join(haze_right_images_path,'{}.png'.format(i)),right_image_vis)
-            skimage.io.imsave(os.path.join(clear_left_images_path,'{}.png'.format(i)),clear_left_vis)
-            skimage.io.imsave(os.path.join(clear_right_images_path,'{}.png'.format(i)),clear_right_vis)
-            skimage.io.imsave(os.path.join(dehaze_left_image_path,'{}.png'.format(i)),deahze_left_vis)
-            skimage.io.imsave(os.path.join(error_map_path,'{}.png'.format(i)),error_maps_vis)
-            skimage.io.imsave(os.path.join(predicted_trans_path,'{}.png'.format(i)),predicted_trans_vis)
+            disp_epe = Disparity_EPE_Loss(output,left_disp)
+            p1_errpr = P1_metric(output,left_disp)
+            psnr_cur = compute_the_psnr(dehaze_image,clear_left_image)
+            trans_cur = L1_Loss(pred_trans,trans_left)
+            airlight_cur = L1_Loss_s(pred_airlight,airlight)
+            
+            
+            disp_EPEs.update(disp_epe.data.item(),clear_left_image.size(0))
+            P1_meter.update(p1_errpr.data.item(),clear_left_image.size(0))
+            psnr_meters.update(psnr_cur.data.item(),clear_left_image.size(0))
+            transmision_L1_meter.update(trans_cur.data.item(),clear_left_image.size(0))
+            airlight_L1_meter.update(airlight_cur.data.item(),clear_left_image.size(0))
+            
+        
+        # # to visible numpys
+        if i%50==0:
+            print("Epoch {}/{}".format(i,len(test_loader)))
+        #     predicted_disparity_vis = output.squeeze(0).squeeze(0).cpu().numpy()
+        #     gt_disparity_left_vis = left_disp.squeeze(0).squeeze(0).cpu().numpy()
+        #     left_image_vis = haze_left.squeeze(0).permute(1,2,0).cpu().numpy()
+        #     right_image_vis = haze_right.squeeze(0).permute(1,2,0).cpu().numpy()
+        #     clear_left_vis = clear_left_image.squeeze(0).permute(1,2,0).cpu().numpy()
+        #     clear_right_vis = clear_right_image.squeeze(0).permute(1,2,0).cpu().numpy()
+        #     deahze_left_vis = dehaze_image.squeeze(0).permute(1,2,0).cpu().numpy()
+        #     error_maps_vis = error_maps.squeeze(0).permute(1,2,0).cpu().numpy()
+        #     predicted_trans_vis = pred_trans.squeeze(0).permute(1,2,0).cpu().numpy()
+            
+        #     skimage.io.imsave(os.path.join(predicted_disparity_path,'{}.png'.format(i)),predicted_disparity_vis)
+        #     skimage.io.imsave(os.path.join(gt_disp_path,'{}.png'.format(i)),gt_disparity_left_vis)
+        #     skimage.io.imsave(os.path.join(haze_left_images_path,'{}.png'.format(i)),left_image_vis)
+        #     skimage.io.imsave(os.path.join(haze_right_images_path,'{}.png'.format(i)),right_image_vis)
+        #     skimage.io.imsave(os.path.join(clear_left_images_path,'{}.png'.format(i)),clear_left_vis)
+        #     skimage.io.imsave(os.path.join(clear_right_images_path,'{}.png'.format(i)),clear_right_vis)
+        #     skimage.io.imsave(os.path.join(dehaze_left_image_path,'{}.png'.format(i)),deahze_left_vis)
+        #     skimage.io.imsave(os.path.join(error_map_path,'{}.png'.format(i)),error_maps_vis)
+        #     skimage.io.imsave(os.path.join(predicted_trans_path,'{}.png'.format(i)),predicted_trans_vis)
         
     
         # plt.figure(figsize=(10,7))
@@ -342,4 +403,13 @@ if __name__=="__main__":
         # plt.show()
         # break
 
-    pass
+    
+    output_result = dict()
+    output_result['EPE'] = disp_EPEs.avg
+    output_result["P1_error"] = P1_meter.avg
+    output_result['PSNR']=psnr_meters.avg
+    output_result['Trans_Error'] = transmision_L1_meter.avg
+    output_result["Airlight_Error"] = airlight_L1_meter.avg
+    
+    saved_json(outputs=output_result,foldername=saved_metris)
+    
