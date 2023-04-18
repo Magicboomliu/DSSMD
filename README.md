@@ -9,5 +9,16 @@ Taeyong Song & Youngjung Kim & Changjae Oh & Kwanghoon Sohn
 
 
 
+## How to Train?
+
+```
+cd scripts
+
+sh train.sh
+
+```
+
+
+
 
 
