@@ -8,10 +8,9 @@ import logging
 import torch.nn as nn
 import torch.backends.cudnn as cudnn
 from utils.common import *
+# from trainfiles.dssmd_traner_new import DisparityTrainer
+from trainfiles.bidnet_trainer import DisparityTrainer
 
-# from trainfiles.dssmd_disp_only import DisparityTrainer
-# from trainfiles.ffanet_trainer import DisparityTrainer
-from trainfiles.ffanet_trainer_kitti import DisparityTrainer
 
 from torch.utils.tensorboard import SummaryWriter
 cudnn.benchmark = True
@@ -59,7 +58,7 @@ def main(opt):
         logger.info('\t'.join(['epoch', 'time_stamp', 'train_loss', 'train_EPE', 'EPE', 'lr']))
         
         for i in range(start_epoch, end_epoch):
-            val_EPE = trainer.validate(summary_writer,i)
+            #val_EPE = trainer.validate(summary_writer,i)
             avg_loss, avg_EPE,iterations = trainer.train_one_epoch(i, r,iterations,summary_writer)
             val_EPE = trainer.validate(summary_writer,i)
             is_best = best_EPE < 0 or val_EPE < best_EPE

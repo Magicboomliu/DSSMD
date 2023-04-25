@@ -8,8 +8,8 @@ import logging
 import torch.nn as nn
 import torch.backends.cudnn as cudnn
 from utils.common import *
-
-from trainfiles.dssmd_disp_only import DisparityTrainer
+# from trainfiles.dssmd_disp_only import DisparityTrainer
+from trainfiles.dssmd_traner_new import DisparityTrainer
 
 from torch.utils.tensorboard import SummaryWriter
 cudnn.benchmark = True

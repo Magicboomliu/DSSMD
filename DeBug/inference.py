@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 from torch.utils.data import DataLoader
 from torch.autograd import Variable
 from utils.devtools import convert_tensor_to_image
-from losses.DSSMDLoss import Disparity_Loss,TransmissionMap_Loss,Airlight_Loss,RecoveredCleanImagesLoss
+from losses.DSSMDLoss import RecoveredCleanImagesLoss
 
 # Keys 
 complete_data=['clear_left_image','clear_right_image','left_disp','right_disp',

@@ -1,0 +1,80 @@
+2023-04-25 19:32:22,641 [train_BidNet.py:126] INFO Configurations: Namespace(augment=0, batch_size=4, beta=0.999, cuda=True, datapath='/media/zliu/datagrid1/liu/sceneflow', dataset='sceneflow', devices='0', flowDiv=1.0, initial_pretrain='none', logFile='logs/BidNet', loss='config/loss_config_disp.json', lr=0.001, manualSeed=1024, maxdisp=-1, model='BidNet', momentum=0.9, net='simplenet', outf='models_saved/BidNet', pretrain='none', save_logdir='experiments_logdir/BidNet', showFreq=100, startEpoch=0, startRound=0, test_batch=1, trainlist='filenames/SceneFlow_Fog.list', trainmodel=None, use_deform=False, vallist='filenames/SceneFlow_Fog_Val.list', workers=8)
+2023-04-25 19:32:22,641 [train_BidNet.py:130] INFO Random Seed: 1024
+2023-04-25 19:32:22,683 [train_BidNet.py:32] INFO [[1.0, 0.8, 0.8, 0.6]]
+2023-04-25 19:32:23,070 [bidnet_trainer.py:108] INFO Use 4 processes to load data...
+2023-04-25 19:32:25,590 [bidnet_trainer.py:135] INFO Initial a new model...
+2023-04-25 19:32:25,594 [train_BidNet.py:56] INFO round 0: [1.0, 0.8, 0.8, 0.6]
+2023-04-25 19:32:25,594 [train_BidNet.py:57] INFO num of epoches: 500
+2023-04-25 19:32:25,594 [train_BidNet.py:58] INFO epoch	time_stamp	train_loss	train_EPE	EPE	lr
+2023-04-25 19:32:25,594 [bidnet_trainer.py:219] INFO learning rate of epoch 0: 0.000300.
+2023-04-25 19:33:19,966 [train_BidNet.py:126] INFO Configurations: Namespace(augment=0, batch_size=4, beta=0.999, cuda=True, datapath='/media/zliu/datagrid1/liu/sceneflow', dataset='sceneflow', devices='0', flowDiv=1.0, initial_pretrain='none', logFile='logs/BidNet', loss='config/loss_config_disp.json', lr=0.001, manualSeed=1024, maxdisp=-1, model='BidNet', momentum=0.9, net='simplenet', outf='models_saved/BidNet', pretrain='none', save_logdir='experiments_logdir/BidNet', showFreq=100, startEpoch=0, startRound=0, test_batch=1, trainlist='filenames/SceneFlow_Fog.list', trainmodel=None, use_deform=False, vallist='filenames/SceneFlow_Fog_Val.list', workers=8)
+2023-04-25 19:33:19,967 [train_BidNet.py:130] INFO Random Seed: 1024
+2023-04-25 19:33:20,013 [train_BidNet.py:32] INFO [[1.0, 0.8, 0.8, 0.6]]
+2023-04-25 19:33:20,424 [bidnet_trainer.py:108] INFO Use 4 processes to load data...
+2023-04-25 19:33:22,917 [bidnet_trainer.py:135] INFO Initial a new model...
+2023-04-25 19:33:22,920 [train_BidNet.py:56] INFO round 0: [1.0, 0.8, 0.8, 0.6]
+2023-04-25 19:33:22,920 [train_BidNet.py:57] INFO num of epoches: 500
+2023-04-25 19:33:22,920 [train_BidNet.py:58] INFO epoch	time_stamp	train_loss	train_EPE	EPE	lr
+2023-04-25 19:33:22,921 [bidnet_trainer.py:219] INFO learning rate of epoch 0: 0.000300.
+2023-04-25 19:34:00,110 [train_BidNet.py:126] INFO Configurations: Namespace(augment=0, batch_size=4, beta=0.999, cuda=True, datapath='/media/zliu/datagrid1/liu/sceneflow', dataset='sceneflow', devices='0', flowDiv=1.0, initial_pretrain='none', logFile='logs/BidNet', loss='config/loss_config_disp.json', lr=0.001, manualSeed=1024, maxdisp=-1, model='BidNet', momentum=0.9, net='simplenet', outf='models_saved/BidNet', pretrain='none', save_logdir='experiments_logdir/BidNet', showFreq=100, startEpoch=0, startRound=0, test_batch=1, trainlist='filenames/SceneFlow_Fog.list', trainmodel=None, use_deform=False, vallist='filenames/SceneFlow_Fog_Val.list', workers=8)
+2023-04-25 19:34:00,110 [train_BidNet.py:130] INFO Random Seed: 1024
+2023-04-25 19:34:00,160 [train_BidNet.py:32] INFO [[1.0, 0.8, 0.8, 0.6]]
+2023-04-25 19:34:00,571 [bidnet_trainer.py:108] INFO Use 4 processes to load data...
+2023-04-25 19:34:03,095 [bidnet_trainer.py:135] INFO Initial a new model...
+2023-04-25 19:34:03,098 [train_BidNet.py:56] INFO round 0: [1.0, 0.8, 0.8, 0.6]
+2023-04-25 19:34:03,098 [train_BidNet.py:57] INFO num of epoches: 500
+2023-04-25 19:34:03,098 [train_BidNet.py:58] INFO epoch	time_stamp	train_loss	train_EPE	EPE	lr
+2023-04-25 19:34:03,098 [bidnet_trainer.py:219] INFO learning rate of epoch 0: 0.000300.
+2023-04-25 19:34:39,560 [train_BidNet.py:126] INFO Configurations: Namespace(augment=0, batch_size=4, beta=0.999, cuda=True, datapath='/media/zliu/datagrid1/liu/sceneflow', dataset='sceneflow', devices='0', flowDiv=1.0, initial_pretrain='none', logFile='logs/BidNet', loss='config/loss_config_disp.json', lr=0.001, manualSeed=1024, maxdisp=-1, model='BidNet', momentum=0.9, net='simplenet', outf='models_saved/BidNet', pretrain='none', save_logdir='experiments_logdir/BidNet', showFreq=100, startEpoch=0, startRound=0, test_batch=1, trainlist='filenames/SceneFlow_Fog.list', trainmodel=None, use_deform=False, vallist='filenames/SceneFlow_Fog_Val.list', workers=8)
+2023-04-25 19:34:39,561 [train_BidNet.py:130] INFO Random Seed: 1024
+2023-04-25 19:34:39,608 [train_BidNet.py:32] INFO [[1.0, 0.8, 0.8, 0.6]]
+2023-04-25 19:34:40,029 [bidnet_trainer.py:108] INFO Use 4 processes to load data...
+2023-04-25 19:34:42,515 [bidnet_trainer.py:135] INFO Initial a new model...
+2023-04-25 19:34:42,518 [train_BidNet.py:56] INFO round 0: [1.0, 0.8, 0.8, 0.6]
+2023-04-25 19:34:42,518 [train_BidNet.py:57] INFO num of epoches: 500
+2023-04-25 19:34:42,518 [train_BidNet.py:58] INFO epoch	time_stamp	train_loss	train_EPE	EPE	lr
+2023-04-25 19:34:42,518 [bidnet_trainer.py:219] INFO learning rate of epoch 0: 0.000300.
+2023-04-25 19:35:17,605 [train_BidNet.py:126] INFO Configurations: Namespace(augment=0, batch_size=4, beta=0.999, cuda=True, datapath='/media/zliu/datagrid1/liu/sceneflow', dataset='sceneflow', devices='0', flowDiv=1.0, initial_pretrain='none', logFile='logs/BidNet', loss='config/loss_config_disp.json', lr=0.001, manualSeed=1024, maxdisp=-1, model='BidNet', momentum=0.9, net='simplenet', outf='models_saved/BidNet', pretrain='none', save_logdir='experiments_logdir/BidNet', showFreq=100, startEpoch=0, startRound=0, test_batch=1, trainlist='filenames/SceneFlow_Fog.list', trainmodel=None, use_deform=False, vallist='filenames/SceneFlow_Fog_Val.list', workers=8)
+2023-04-25 19:35:17,605 [train_BidNet.py:130] INFO Random Seed: 1024
+2023-04-25 19:35:17,648 [train_BidNet.py:32] INFO [[1.0, 0.8, 0.8, 0.6]]
+2023-04-25 19:35:18,036 [bidnet_trainer.py:108] INFO Use 4 processes to load data...
+2023-04-25 19:35:20,523 [bidnet_trainer.py:135] INFO Initial a new model...
+2023-04-25 19:35:20,527 [train_BidNet.py:56] INFO round 0: [1.0, 0.8, 0.8, 0.6]
+2023-04-25 19:35:20,527 [train_BidNet.py:57] INFO num of epoches: 500
+2023-04-25 19:35:20,527 [train_BidNet.py:58] INFO epoch	time_stamp	train_loss	train_EPE	EPE	lr
+2023-04-25 19:35:20,527 [bidnet_trainer.py:219] INFO learning rate of epoch 0: 0.000300.
+2023-04-25 19:35:59,501 [train_BidNet.py:126] INFO Configurations: Namespace(augment=0, batch_size=4, beta=0.999, cuda=True, datapath='/media/zliu/datagrid1/liu/sceneflow', dataset='sceneflow', devices='0', flowDiv=1.0, initial_pretrain='none', logFile='logs/BidNet', loss='config/loss_config_disp.json', lr=0.001, manualSeed=1024, maxdisp=-1, model='BidNet', momentum=0.9, net='simplenet', outf='models_saved/BidNet', pretrain='none', save_logdir='experiments_logdir/BidNet', showFreq=100, startEpoch=0, startRound=0, test_batch=1, trainlist='filenames/SceneFlow_Fog.list', trainmodel=None, use_deform=False, vallist='filenames/SceneFlow_Fog_Val.list', workers=8)
+2023-04-25 19:35:59,502 [train_BidNet.py:130] INFO Random Seed: 1024
+2023-04-25 19:35:59,547 [train_BidNet.py:32] INFO [[1.0, 0.8, 0.8, 0.6]]
+2023-04-25 19:35:59,975 [bidnet_trainer.py:108] INFO Use 4 processes to load data...
+2023-04-25 19:36:02,481 [bidnet_trainer.py:135] INFO Initial a new model...
+2023-04-25 19:36:02,640 [train_BidNet.py:56] INFO round 0: [1.0, 0.8, 0.8, 0.6]
+2023-04-25 19:36:02,640 [train_BidNet.py:57] INFO num of epoches: 500
+2023-04-25 19:36:02,641 [train_BidNet.py:58] INFO epoch	time_stamp	train_loss	train_EPE	EPE	lr
+2023-04-25 19:36:02,642 [bidnet_trainer.py:219] INFO learning rate of epoch 0: 0.000300.
+2023-04-25 19:40:27,486 [train_BidNet.py:126] INFO Configurations: Namespace(augment=0, batch_size=4, beta=0.999, cuda=True, datapath='/media/zliu/datagrid1/liu/sceneflow', dataset='sceneflow', devices='0', flowDiv=1.0, initial_pretrain='none', logFile='logs/BidNet', loss='config/loss_config_disp.json', lr=0.001, manualSeed=1024, maxdisp=-1, model='BidNet', momentum=0.9, net='simplenet', outf='models_saved/BidNet', pretrain='none', save_logdir='experiments_logdir/BidNet', showFreq=100, startEpoch=0, startRound=0, test_batch=1, trainlist='filenames/SceneFlow_Fog.list', trainmodel=None, use_deform=False, vallist='filenames/SceneFlow_Fog_Val.list', workers=8)
+2023-04-25 19:40:27,486 [train_BidNet.py:130] INFO Random Seed: 1024
+2023-04-25 19:40:27,532 [train_BidNet.py:32] INFO [[1.0, 0.8, 0.8, 0.6]]
+2023-04-25 19:40:27,933 [bidnet_trainer.py:127] INFO Use 4 processes to load data...
+2023-04-25 19:40:30,473 [bidnet_trainer.py:154] INFO Initial a new model...
+2023-04-25 19:40:30,476 [train_BidNet.py:56] INFO round 0: [1.0, 0.8, 0.8, 0.6]
+2023-04-25 19:40:30,476 [train_BidNet.py:57] INFO num of epoches: 500
+2023-04-25 19:40:30,476 [train_BidNet.py:58] INFO epoch	time_stamp	train_loss	train_EPE	EPE	lr
+2023-04-25 19:40:30,477 [bidnet_trainer.py:238] INFO learning rate of epoch 0: 0.000300.
+2023-04-25 19:40:58,740 [train_BidNet.py:126] INFO Configurations: Namespace(augment=0, batch_size=4, beta=0.999, cuda=True, datapath='/media/zliu/datagrid1/liu/sceneflow', dataset='sceneflow', devices='0', flowDiv=1.0, initial_pretrain='none', logFile='logs/BidNet', loss='config/loss_config_disp.json', lr=0.001, manualSeed=1024, maxdisp=-1, model='BidNet', momentum=0.9, net='simplenet', outf='models_saved/BidNet', pretrain='none', save_logdir='experiments_logdir/BidNet', showFreq=100, startEpoch=0, startRound=0, test_batch=1, trainlist='filenames/SceneFlow_Fog.list', trainmodel=None, use_deform=False, vallist='filenames/SceneFlow_Fog_Val.list', workers=8)
+2023-04-25 19:40:58,740 [train_BidNet.py:130] INFO Random Seed: 1024
+2023-04-25 19:40:58,783 [train_BidNet.py:32] INFO [[1.0, 0.8, 0.8, 0.6]]
+2023-04-25 19:40:59,196 [bidnet_trainer.py:127] INFO Use 4 processes to load data...
+2023-04-25 19:41:01,718 [bidnet_trainer.py:154] INFO Initial a new model...
+2023-04-25 19:41:01,721 [train_BidNet.py:56] INFO round 0: [1.0, 0.8, 0.8, 0.6]
+2023-04-25 19:41:01,721 [train_BidNet.py:57] INFO num of epoches: 500
+2023-04-25 19:41:01,721 [train_BidNet.py:58] INFO epoch	time_stamp	train_loss	train_EPE	EPE	lr
+2023-04-25 19:41:01,722 [bidnet_trainer.py:238] INFO learning rate of epoch 0: 0.000300.
+2023-04-25 19:41:05,803 [bidnet_trainer.py:361] INFO this is round 0
+2023-04-25 19:41:05,803 [bidnet_trainer.py:379] INFO Epoch: [0][0/8864]	Time 4.081 (4.081)	Data 0.344 (0.344)	Loss 2.460 (2.460)	transmission_loss 0.691 (0.691)	airlight_loss 0.361 (0.361)	recovered_loss 1.408 (1.408)	PSNR_Left 7.868 (7.868)	PSNR_Right 7.706 (7.706)	
+2023-04-25 19:41:12,563 [bidnet_trainer.py:361] INFO this is round 0
+2023-04-25 19:41:12,563 [bidnet_trainer.py:379] INFO Epoch: [0][10/8864]	Time 0.673 (0.986)	Data 0.004 (0.035)	Loss 1.751 (2.046)	transmission_loss 0.623 (0.738)	airlight_loss 0.338 (0.351)	recovered_loss 0.791 (0.957)	PSNR_Left 11.966 (10.605)	PSNR_Right 12.025 (10.563)	
+2023-04-25 19:41:20,427 [bidnet_trainer.py:361] INFO this is round 0
+2023-04-25 19:41:20,427 [bidnet_trainer.py:379] INFO Epoch: [0][20/8864]	Time 0.688 (0.891)	Data 0.004 (0.073)	Loss 1.314 (1.837)	transmission_loss 0.529 (0.670)	airlight_loss 0.184 (0.300)	recovered_loss 0.601 (0.867)	PSNR_Left 12.537 (10.988)	PSNR_Right 12.392 (10.953)	
+2023-04-25 19:41:30,315 [bidnet_trainer.py:361] INFO this is round 0
+2023-04-25 19:41:30,315 [bidnet_trainer.py:379] INFO Epoch: [0][30/8864]	Time 0.670 (0.922)	Data 0.004 (0.147)	Loss 1.747 (1.640)	transmission_loss 1.039 (0.640)	airlight_loss 0.070 (0.241)	recovered_loss 0.638 (0.758)	PSNR_Left 12.751 (12.245)	PSNR_Right 13.082 (12.129)	

@@ -31,21 +31,37 @@ class Disparity_Loss(nn.Module):
             total_loss = self.disp_loss(predicted_disparity_pyramid,gt_disparity)
 
         return total_loss
+    
+    
 
-
-# Transmission Map Loss.
-class TransmissionMap_Loss(nn.Module):
-    def __init__(self,type='smooth_l1'):
-        super(TransmissionMap_Loss,self).__init__()
-        # self.trans_loss_type =type
-        # if self.trans_loss_type=='smooth_l1':
-        #     self.trans_loss = nn.SmoothL1Loss(size_average=True,reduction='mean')
-        self.loss = nn.SmoothL1Loss(size_average=True,reduction='mean')
-
-    def foward(self,predict_tranmission_map,gt_transmission_map):
-        loss = self.loss(predict_tranmission_map,gt_transmission_map)
+# Disparity Smooth-L1 Loss.
+class Transmission_Loss(nn.Module):
+    def __init__(self,type='smooth_l1',weights=[0.6,0.8,1.0,1.0]):
+        super().__init__()
+        self.loss_type = type
+        if self.loss_type=='smooth_l1':
+            self.disp_loss = nn.L1Loss(size_average=True,reduction='mean')
+        self.weights = weights
+    
+    def forward(self,predicted_trans_pyramid,gt_trans):
         
-        return loss
+        total_loss = 0
+        # for multiple output
+        if isinstance(predicted_trans_pyramid,list) or isinstance(predicted_trans_pyramid,tuple):
+            for idx, predicted_trans in enumerate(predicted_trans_pyramid):
+                scale = gt_trans.shape[-1]//predicted_trans.shape[-1]
+                cur_gt_trans = F.interpolate(gt_trans,scale_factor=1./scale,mode='bilinear',align_corners=False)*1.0
+                cur_gt_trans = torch.clamp(cur_gt_trans,min=0.0,max=1.0)
+                assert predicted_trans.shape[-1]==cur_gt_trans.shape[-1]
+                cur_loss = self.disp_loss(predicted_trans,cur_gt_trans)
+                total_loss+=self.weights[idx] * cur_loss
+        # for single output
+        else:
+            assert predicted_trans_pyramid.shape[-1] == gt_trans.shape[-1]
+            total_loss = self.disp_loss(predicted_trans_pyramid,gt_trans)
+
+        return total_loss
+
         
 
 
@@ -70,13 +86,50 @@ class RecoveredCleanImagesLoss(nn.Module):
         
     def forward(self,transmission_map,airlight,haze_image,clean_image):
         
+        '''
+        transmision: [B,1,H,W]
+        haze image: [B,3,H,W]
+        airlight: [B,1]
+        '''
+        scale = haze_image.shape[-1]//transmission_map.shape[-1]
+        if scale!=1:
+            haze_image = F.interpolate(haze_image,scale_factor=1./scale,mode='bilinear',align_corners=False)
+            clean_image = F.interpolate(clean_image,scale_factor=1./scale,mode='bilinear',align_corners=False)
+        airlight = airlight.unsqueeze(-1).unsqueeze(-1) #[B,1,1,1]
+        
+        # if transmission = 0, how to real with?
+        if transmission_map.min==0:
+            recovered_clean = (haze_image-airlight*(1-transmission_map))/(transmission_map+1e-4)
+        else:
+            recovered_clean = (haze_image-airlight*(1-transmission_map))/(transmission_map)
+            
+        recovered_clean = torch.clamp(recovered_clean,min=0,max=1.0)
+        
+        if self.loss_type=='normal':
+            loss = self.loss_op(recovered_clean,clean_image)
+
+        return loss
+    
+
+# recovered Clean Image Loss.
+class RecoveredCleanImagesLossV2(nn.Module):
+    def __init__(self,type='normal'):
+        super().__init__()
+        self.loss_type = type
+        self.loss_op = nn.L1Loss(size_average=True,reduction='mean')
+        
+    def forward(self,transmission_map,airlight,haze_image,clean_image):
         
         '''
         transmision: [B,1,H,W]
         haze image: [B,3,H,W]
         airlight: [B,1]
         '''
-        airlight = airlight.unsqueeze(-1).unsqueeze(-1) #[B,1,1,1]
+        scale = haze_image.shape[-1]//transmission_map.shape[-1]
+        if scale!=1:
+            haze_image = F.interpolate(haze_image,scale_factor=1./scale,mode='bilinear',align_corners=False)
+            clean_image = F.interpolate(clean_image,scale_factor=1./scale,mode='bilinear',align_corners=False)
+
         
         # if transmission = 0, how to real with?
         if transmission_map.min==0:
@@ -92,10 +145,3 @@ class RecoveredCleanImagesLoss(nn.Module):
         return loss
 
 
-
-# Recovered Depth Loss(Optional)
-class RecoveredDepthLoss(nn.Module):
-    def __init__(self):
-        super().__init__()
-    def forward(self):
-        pass

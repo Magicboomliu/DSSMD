@@ -225,6 +225,77 @@ class res_submodule(nn.Module):
 
         res = self.res(conv6)
         return res
+    
+
+# res_submodule.
+class res_submodule_trans(nn.Module):
+    def __init__(self,value_planes, out_planes):
+        super(res_submodule_trans, self).__init__()
+
+        self.conv1 = nn.Sequential(
+            nn.Conv2d(value_planes+2, out_planes, kernel_size=3, stride=2, padding=1, bias=False),
+            nn.BatchNorm2d(out_planes),
+            nn.ReLU(True)
+        )
+
+        self.conv2 = nn.Sequential(
+            nn.Conv2d(out_planes, out_planes*2, kernel_size=3, stride=1, padding=1, bias=False),
+            nn.BatchNorm2d(out_planes*2),
+            nn.ReLU(True)
+        )
+
+        self.conv3 = nn.Sequential(
+            nn.Conv2d(out_planes*2, out_planes*2, kernel_size=3, stride=2, padding=1, bias=False),
+            nn.BatchNorm2d(out_planes*2),
+            nn.ReLU(True)
+        )
+        
+        self.conv4 = nn.Sequential(
+            nn.Conv2d(out_planes*2, out_planes*2, kernel_size=3, stride=1, padding=1, bias=False),
+            nn.BatchNorm2d(out_planes*2),
+            nn.ReLU(True)
+        )
+
+        self.conv5 = nn.Sequential(
+            nn.ConvTranspose2d(out_planes*2, out_planes, 3, stride=2, padding=1, output_padding=1, bias=False),
+            nn.BatchNorm2d(out_planes)
+        )
+
+        self.conv6 = nn.Sequential(
+            nn.ConvTranspose2d(out_planes, out_planes, 3, stride=2, padding=1, output_padding=1, bias=False),
+            nn.BatchNorm2d(out_planes)
+        )
+
+        self.redir1 = nn.Sequential(
+            nn.Conv2d(value_planes+2, out_planes, kernel_size=1, stride=1, padding=0, bias=False)
+        )
+
+        self.redir2 = nn.Sequential(
+            nn.Conv2d(out_planes*2, out_planes, kernel_size=1, stride=1, padding=0, bias=False)
+        )
+
+        self.res = nn.Sequential(
+            nn.Conv2d(out_planes, 1, 1, 1, bias=False),
+            nn.Sigmoid())
+        
+
+    def forward(self, depth_raw, previous_trans ,feature):
+
+        conv1 = self.conv1(torch.cat((depth_raw, previous_trans,feature), dim=1))
+        conv2 = self.conv2(conv1)
+        conv3 = self.conv3(conv2)
+        conv4 = self.conv4(conv3)
+        conv5 = F.relu(self.conv5(conv4) + self.redir2(conv2), inplace=True)
+        conv6 = F.relu(self.conv6(conv5) + self.redir1(torch.cat((depth_raw, previous_trans, feature), dim=1)))
+
+        res = self.res(conv6)
+        return res
+
+    
+
+
+
+
 
 
 def build_corr(img_left, img_right, max_disp=40):

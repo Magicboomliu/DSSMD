@@ -1,0 +1,148 @@
+2023-04-24 17:09:16,124 [train_ffanet.py:127] INFO Configurations: Namespace(augment=0, batch_size=2, beta=0.999, cuda=True, datapath='/media/zliu/datagrid1/liu/kitti_stereo', dataset='KITTI', devices='0', flowDiv=1.0, initial_pretrain='none', logFile='logs/FFANet', loss='config/loss_config_disp.json', lr=0.001, manualSeed=1024, maxdisp=-1, model='FFANet', momentum=0.9, net='simplenet', outf='models_saved/FFANet', pretrain='none', save_logdir='experiments_logdir/FFANet', showFreq=100, startEpoch=0, startRound=0, test_batch=1, trainlist='filenames/kitti_filenames_with_parameters/kitti_mix_train_normal_pseudo_para.txt', trainmodel=None, use_deform=False, vallist='filenames/kitti_filenames_with_parameters/kitti_mix_val_normal_pseudo_para.txt', workers=8)
+2023-04-24 17:09:16,125 [train_ffanet.py:131] INFO Random Seed: 1024
+2023-04-24 17:09:16,170 [train_ffanet.py:33] INFO [[1.0, 0.8, 0.8, 0.6]]
+2023-04-24 17:09:16,175 [ffanet_trainer_kitti.py:83] INFO Use 4 processes to load data...
+2023-04-24 17:09:18,962 [ffanet_trainer_kitti.py:110] INFO Initial a new model...
+2023-04-24 17:09:18,978 [train_ffanet.py:57] INFO round 0: [1.0, 0.8, 0.8, 0.6]
+2023-04-24 17:09:18,978 [train_ffanet.py:58] INFO num of epoches: 500
+2023-04-24 17:09:18,978 [train_ffanet.py:59] INFO epoch	time_stamp	train_loss	train_EPE	EPE	lr
+2023-04-24 17:09:18,983 [ffanet_trainer_kitti.py:189] INFO learning rate of epoch 0: 0.000200.
+2023-04-24 17:09:21,787 [ffanet_trainer_kitti.py:267] INFO this is round 0
+2023-04-24 17:09:21,788 [ffanet_trainer_kitti.py:278] INFO Epoch: [0][0/187]	Time 2.804 (2.804)	Data 0.266 (0.266)	Loss 0.257 (0.257)	PSNR 10.186 (10.186)	
+2023-04-24 17:09:36,398 [ffanet_trainer_kitti.py:267] INFO this is round 0
+2023-04-24 17:09:36,398 [ffanet_trainer_kitti.py:278] INFO Epoch: [0][10/187]	Time 1.433 (1.583)	Data 0.001 (0.025)	Loss 0.200 (0.226)	PSNR 12.181 (11.614)	
+2023-04-24 17:09:50,742 [ffanet_trainer_kitti.py:267] INFO this is round 0
+2023-04-24 17:09:50,796 [ffanet_trainer_kitti.py:278] INFO Epoch: [0][20/187]	Time 1.431 (1.512)	Data 0.001 (0.014)	Loss 0.181 (0.230)	PSNR 13.468 (11.367)	
+2023-04-24 17:10:06,120 [ffanet_trainer_kitti.py:267] INFO this is round 0
+2023-04-24 17:10:06,120 [ffanet_trainer_kitti.py:278] INFO Epoch: [0][30/187]	Time 1.492 (1.521)	Data 0.001 (0.012)	Loss 0.229 (0.214)	PSNR 10.900 (11.919)	
+2023-04-24 17:10:21,673 [ffanet_trainer_kitti.py:267] INFO this is round 0
+2023-04-24 17:10:21,673 [ffanet_trainer_kitti.py:278] INFO Epoch: [0][40/187]	Time 1.522 (1.529)	Data 0.001 (0.009)	Loss 0.170 (0.203)	PSNR 13.120 (12.402)	
+2023-04-24 17:10:36,744 [ffanet_trainer_kitti.py:267] INFO this is round 0
+2023-04-24 17:10:36,744 [ffanet_trainer_kitti.py:278] INFO Epoch: [0][50/187]	Time 1.444 (1.525)	Data 0.001 (0.008)	Loss 0.139 (0.203)	PSNR 14.801 (12.343)	
+2023-04-24 17:10:52,035 [ffanet_trainer_kitti.py:267] INFO this is round 0
+2023-04-24 17:10:52,035 [ffanet_trainer_kitti.py:278] INFO Epoch: [0][60/187]	Time 1.518 (1.525)	Data 0.001 (0.007)	Loss 0.141 (0.198)	PSNR 15.009 (12.479)	
+2023-04-24 17:11:06,906 [ffanet_trainer_kitti.py:267] INFO this is round 0
+2023-04-24 17:11:06,906 [ffanet_trainer_kitti.py:278] INFO Epoch: [0][70/187]	Time 1.508 (1.520)	Data 0.001 (0.006)	Loss 0.134 (0.195)	PSNR 15.550 (12.642)	
+2023-04-24 17:11:21,919 [ffanet_trainer_kitti.py:267] INFO this is round 0
+2023-04-24 17:11:21,920 [ffanet_trainer_kitti.py:278] INFO Epoch: [0][80/187]	Time 1.521 (1.518)	Data 0.001 (0.005)	Loss 0.149 (0.189)	PSNR 14.764 (12.831)	
+2023-04-24 17:12:37,413 [train_ffanet.py:127] INFO Configurations: Namespace(augment=0, batch_size=2, beta=0.999, cuda=True, datapath='/media/zliu/datagrid1/liu/kitti_stereo', dataset='KITTI', devices='0', flowDiv=1.0, initial_pretrain='none', logFile='logs/FFANet', loss='config/loss_config_disp.json', lr=0.001, manualSeed=1024, maxdisp=-1, model='FFANet', momentum=0.9, net='simplenet', outf='models_saved/FFANet', pretrain='none', save_logdir='experiments_logdir/FFANet', showFreq=100, startEpoch=0, startRound=0, test_batch=1, trainlist='filenames/kitti_filenames_with_parameters/kitti_mix_train_normal_pseudo_para.txt', trainmodel=None, use_deform=False, vallist='filenames/kitti_filenames_with_parameters/kitti_mix_val_normal_pseudo_para.txt', workers=8)
+2023-04-24 17:12:37,413 [train_ffanet.py:131] INFO Random Seed: 1024
+2023-04-24 17:12:37,461 [train_ffanet.py:33] INFO [[1.0, 0.8, 0.8, 0.6]]
+2023-04-24 17:12:37,466 [ffanet_trainer_kitti.py:83] INFO Use 4 processes to load data...
+2023-04-24 17:12:40,053 [ffanet_trainer_kitti.py:110] INFO Initial a new model...
+2023-04-24 17:12:40,062 [train_ffanet.py:57] INFO round 0: [1.0, 0.8, 0.8, 0.6]
+2023-04-24 17:12:40,062 [train_ffanet.py:58] INFO num of epoches: 500
+2023-04-24 17:12:40,062 [train_ffanet.py:59] INFO epoch	time_stamp	train_loss	train_EPE	EPE	lr
+2023-04-24 17:12:41,167 [ffanet_trainer_kitti.py:347] INFO Test: [0/20]	 Time 1.1026806831359863	 PSNR 5.53928279876709	 
+2023-04-24 17:12:46,338 [ffanet_trainer_kitti.py:347] INFO Test: [10/20]	 Time 0.5152239799499512	 PSNR 9.144635200500488	 
+2023-04-24 17:12:51,031 [ffanet_trainer_kitti.py:363] INFO  * PSNR meter 8.684
+2023-04-24 17:12:51,031 [ffanet_trainer_kitti.py:364] INFO  * avg inference time 0.207
+2023-04-24 17:12:51,036 [ffanet_trainer_kitti.py:189] INFO learning rate of epoch 0: 0.000200.
+2023-04-24 17:12:53,807 [ffanet_trainer_kitti.py:267] INFO this is round 0
+2023-04-24 17:12:53,807 [ffanet_trainer_kitti.py:278] INFO Epoch: [0][0/187]	Time 2.771 (2.771)	Data 0.278 (0.278)	Loss 0.212 (0.212)	PSNR 11.890 (11.890)	
+2023-04-24 17:13:08,325 [ffanet_trainer_kitti.py:267] INFO this is round 0
+2023-04-24 17:13:08,325 [ffanet_trainer_kitti.py:278] INFO Epoch: [0][10/187]	Time 1.437 (1.572)	Data 0.001 (0.027)	Loss 0.208 (0.236)	PSNR 12.299 (11.251)	
+2023-04-24 17:13:22,790 [ffanet_trainer_kitti.py:267] INFO this is round 0
+2023-04-24 17:13:22,791 [ffanet_trainer_kitti.py:278] INFO Epoch: [0][20/187]	Time 1.420 (1.512)	Data 0.001 (0.015)	Loss 0.228 (0.200)	PSNR 11.870 (12.814)	
+2023-04-24 17:40:47,491 [train_ffanet.py:127] INFO Configurations: Namespace(augment=0, batch_size=2, beta=0.999, cuda=True, datapath='/media/zliu/datagrid1/liu/kitti_stereo', dataset='KITTI', devices='0', flowDiv=1.0, initial_pretrain='none', logFile='logs/FFANet', loss='config/loss_config_disp.json', lr=0.001, manualSeed=1024, maxdisp=-1, model='FFANet', momentum=0.9, net='simplenet', outf='models_saved/FFANet', pretrain='none', save_logdir='experiments_logdir/FFANet', showFreq=100, startEpoch=0, startRound=0, test_batch=1, trainlist='filenames/kitti_filenames_with_parameters/kitti_mix_train_normal_pseudo_para.txt', trainmodel=None, use_deform=False, vallist='filenames/kitti_filenames_with_parameters/kitti_mix_val_normal_pseudo_para.txt', workers=8)
+2023-04-24 17:40:47,491 [train_ffanet.py:131] INFO Random Seed: 1024
+2023-04-24 17:40:47,538 [train_ffanet.py:33] INFO [[1.0, 0.8, 0.8, 0.6]]
+2023-04-24 17:40:47,542 [ffanet_trainer_kitti.py:84] INFO Use 4 processes to load data...
+2023-04-24 17:40:50,135 [ffanet_trainer_kitti.py:111] INFO Initial a new model...
+2023-04-24 17:40:50,144 [train_ffanet.py:57] INFO round 0: [1.0, 0.8, 0.8, 0.6]
+2023-04-24 17:40:50,144 [train_ffanet.py:58] INFO num of epoches: 500
+2023-04-24 17:40:50,144 [train_ffanet.py:59] INFO epoch	time_stamp	train_loss	train_EPE	EPE	lr
+2023-04-24 17:41:07,109 [train_ffanet.py:127] INFO Configurations: Namespace(augment=0, batch_size=2, beta=0.999, cuda=True, datapath='/media/zliu/datagrid1/liu/kitti_stereo', dataset='KITTI', devices='0', flowDiv=1.0, initial_pretrain='none', logFile='logs/FFANet', loss='config/loss_config_disp.json', lr=0.001, manualSeed=1024, maxdisp=-1, model='FFANet', momentum=0.9, net='simplenet', outf='models_saved/FFANet', pretrain='none', save_logdir='experiments_logdir/FFANet', showFreq=100, startEpoch=0, startRound=0, test_batch=1, trainlist='filenames/kitti_filenames_with_parameters/kitti_mix_train_normal_pseudo_para.txt', trainmodel=None, use_deform=False, vallist='filenames/kitti_filenames_with_parameters/kitti_mix_val_normal_pseudo_para.txt', workers=8)
+2023-04-24 17:41:07,110 [train_ffanet.py:131] INFO Random Seed: 1024
+2023-04-24 17:41:07,155 [train_ffanet.py:33] INFO [[1.0, 0.8, 0.8, 0.6]]
+2023-04-24 17:41:07,159 [ffanet_trainer_kitti.py:84] INFO Use 4 processes to load data...
+2023-04-24 17:41:09,638 [ffanet_trainer_kitti.py:111] INFO Initial a new model...
+2023-04-24 17:41:09,647 [train_ffanet.py:57] INFO round 0: [1.0, 0.8, 0.8, 0.6]
+2023-04-24 17:41:09,647 [train_ffanet.py:58] INFO num of epoches: 500
+2023-04-24 17:41:09,647 [train_ffanet.py:59] INFO epoch	time_stamp	train_loss	train_EPE	EPE	lr
+2023-04-24 17:41:09,946 [util.py:64] WARNING Lossy conversion from float32 to uint8. Range [0, 1]. Convert image to uint8 prior to saving to suppress this warning.
+2023-04-24 17:41:10,765 [ffanet_trainer_kitti.py:355] INFO Test: [0/20]	 Time 1.1156115531921387	 PSNR 5.53928279876709	 
+2023-04-24 17:41:10,776 [util.py:64] WARNING Lossy conversion from float32 to uint8. Range [0, 1]. Convert image to uint8 prior to saving to suppress this warning.
+2023-04-24 17:41:11,305 [util.py:64] WARNING Lossy conversion from float32 to uint8. Range [0, 1]. Convert image to uint8 prior to saving to suppress this warning.
+2023-04-24 17:41:11,829 [util.py:64] WARNING Lossy conversion from float32 to uint8. Range [0, 1]. Convert image to uint8 prior to saving to suppress this warning.
+2023-04-24 17:41:12,351 [util.py:64] WARNING Lossy conversion from float32 to uint8. Range [0, 1]. Convert image to uint8 prior to saving to suppress this warning.
+2023-04-24 17:50:44,795 [train_ffanet.py:127] INFO Configurations: Namespace(augment=0, batch_size=2, beta=0.999, cuda=True, datapath='/media/zliu/datagrid1/liu/kitti_stereo', dataset='KITTI', devices='0', flowDiv=1.0, initial_pretrain='none', logFile='logs/FFANet', loss='config/loss_config_disp.json', lr=0.001, manualSeed=1024, maxdisp=-1, model='FFANet', momentum=0.9, net='simplenet', outf='models_saved/FFANet', pretrain='none', save_logdir='experiments_logdir/FFANet', showFreq=100, startEpoch=0, startRound=0, test_batch=1, trainlist='filenames/kitti_filenames_with_parameters/kitti_mix_train_normal_pseudo_para.txt', trainmodel=None, use_deform=False, vallist='filenames/kitti_filenames_with_parameters/kitti_mix_val_normal_pseudo_para.txt', workers=8)
+2023-04-24 17:50:44,796 [train_ffanet.py:131] INFO Random Seed: 1024
+2023-04-24 17:50:44,843 [train_ffanet.py:33] INFO [[1.0, 0.8, 0.8, 0.6]]
+2023-04-24 17:50:44,850 [ffanet_trainer_kitti.py:84] INFO Use 4 processes to load data...
+2023-04-24 17:50:47,374 [ffanet_trainer_kitti.py:111] INFO Initial a new model...
+2023-04-24 17:50:47,384 [train_ffanet.py:57] INFO round 0: [1.0, 0.8, 0.8, 0.6]
+2023-04-24 17:50:47,384 [train_ffanet.py:58] INFO num of epoches: 500
+2023-04-24 17:50:47,384 [train_ffanet.py:59] INFO epoch	time_stamp	train_loss	train_EPE	EPE	lr
+2023-04-24 17:50:47,713 [util.py:64] WARNING Lossy conversion from float32 to uint8. Range [0, 1]. Convert image to uint8 prior to saving to suppress this warning.
+2023-04-24 17:50:48,524 [ffanet_trainer_kitti.py:356] INFO Test: [0/20]	 Time 1.1368474960327148	 PSNR 5.53928279876709	 
+2023-04-24 17:50:48,532 [util.py:64] WARNING Lossy conversion from float32 to uint8. Range [0, 1]. Convert image to uint8 prior to saving to suppress this warning.
+2023-04-24 17:50:49,075 [util.py:64] WARNING Lossy conversion from float32 to uint8. Range [0, 1]. Convert image to uint8 prior to saving to suppress this warning.
+2023-04-24 17:52:02,719 [train_ffanet.py:127] INFO Configurations: Namespace(augment=0, batch_size=2, beta=0.999, cuda=True, datapath='/media/zliu/datagrid1/liu/kitti_stereo', dataset='KITTI', devices='0', flowDiv=1.0, initial_pretrain='none', logFile='logs/FFANet', loss='config/loss_config_disp.json', lr=0.001, manualSeed=1024, maxdisp=-1, model='FFANet', momentum=0.9, net='simplenet', outf='models_saved/FFANet', pretrain='none', save_logdir='experiments_logdir/FFANet', showFreq=100, startEpoch=0, startRound=0, test_batch=1, trainlist='filenames/kitti_filenames_with_parameters/kitti_mix_train_normal_pseudo_para.txt', trainmodel=None, use_deform=False, vallist='filenames/kitti_filenames_with_parameters/kitti_mix_val_normal_pseudo_para.txt', workers=8)
+2023-04-24 17:52:02,720 [train_ffanet.py:131] INFO Random Seed: 1024
+2023-04-24 17:52:02,763 [train_ffanet.py:33] INFO [[1.0, 0.8, 0.8, 0.6]]
+2023-04-24 17:52:02,768 [ffanet_trainer_kitti.py:84] INFO Use 4 processes to load data...
+2023-04-24 17:52:05,241 [ffanet_trainer_kitti.py:111] INFO Initial a new model...
+2023-04-24 17:52:05,251 [train_ffanet.py:57] INFO round 0: [1.0, 0.8, 0.8, 0.6]
+2023-04-24 17:52:05,251 [train_ffanet.py:58] INFO num of epoches: 500
+2023-04-24 17:52:05,251 [train_ffanet.py:59] INFO epoch	time_stamp	train_loss	train_EPE	EPE	lr
+2023-04-24 17:52:05,727 [util.py:64] WARNING Lossy conversion from float32 to uint8. Range [0, 1]. Convert image to uint8 prior to saving to suppress this warning.
+2023-04-24 17:52:06,588 [ffanet_trainer_kitti.py:356] INFO Test: [0/20]	 Time 1.3346974849700928	 PSNR 5.539282321929932	 
+2023-04-24 17:52:06,597 [util.py:64] WARNING Lossy conversion from float32 to uint8. Range [0, 1]. Convert image to uint8 prior to saving to suppress this warning.
+2023-04-24 17:52:07,198 [util.py:64] WARNING Lossy conversion from float32 to uint8. Range [0, 1]. Convert image to uint8 prior to saving to suppress this warning.
+2023-04-24 17:52:07,797 [util.py:64] WARNING Lossy conversion from float32 to uint8. Range [0, 1]. Convert image to uint8 prior to saving to suppress this warning.
+2023-04-24 17:52:23,108 [train_ffanet.py:127] INFO Configurations: Namespace(augment=0, batch_size=2, beta=0.999, cuda=True, datapath='/media/zliu/datagrid1/liu/kitti_stereo', dataset='KITTI', devices='0', flowDiv=1.0, initial_pretrain='none', logFile='logs/FFANet', loss='config/loss_config_disp.json', lr=0.001, manualSeed=1024, maxdisp=-1, model='FFANet', momentum=0.9, net='simplenet', outf='models_saved/FFANet', pretrain='none', save_logdir='experiments_logdir/FFANet', showFreq=100, startEpoch=0, startRound=0, test_batch=1, trainlist='filenames/kitti_filenames_with_parameters/kitti_mix_train_normal_pseudo_para.txt', trainmodel=None, use_deform=False, vallist='filenames/kitti_filenames_with_parameters/kitti_mix_val_normal_pseudo_para.txt', workers=8)
+2023-04-24 17:52:23,109 [train_ffanet.py:131] INFO Random Seed: 1024
+2023-04-24 17:52:23,152 [train_ffanet.py:33] INFO [[1.0, 0.8, 0.8, 0.6]]
+2023-04-24 17:52:23,157 [ffanet_trainer_kitti.py:84] INFO Use 4 processes to load data...
+2023-04-24 17:52:25,688 [ffanet_trainer_kitti.py:111] INFO Initial a new model...
+2023-04-24 17:52:25,698 [train_ffanet.py:57] INFO round 0: [1.0, 0.8, 0.8, 0.6]
+2023-04-24 17:52:25,698 [train_ffanet.py:58] INFO num of epoches: 500
+2023-04-24 17:52:25,698 [train_ffanet.py:59] INFO epoch	time_stamp	train_loss	train_EPE	EPE	lr
+2023-04-24 17:52:25,968 [util.py:64] WARNING Lossy conversion from float32 to uint8. Range [0, 1]. Convert image to uint8 prior to saving to suppress this warning.
+2023-04-24 17:52:26,760 [ffanet_trainer_kitti.py:356] INFO Test: [0/20]	 Time 1.0588068962097168	 PSNR 5.53928279876709	 
+2023-04-24 17:52:26,770 [util.py:64] WARNING Lossy conversion from float32 to uint8. Range [0, 1]. Convert image to uint8 prior to saving to suppress this warning.
+2023-04-24 17:52:27,313 [util.py:64] WARNING Lossy conversion from float32 to uint8. Range [0, 1]. Convert image to uint8 prior to saving to suppress this warning.
+2023-04-24 17:52:27,854 [util.py:64] WARNING Lossy conversion from float32 to uint8. Range [0, 1]. Convert image to uint8 prior to saving to suppress this warning.
+2023-04-24 17:55:44,070 [train_ffanet.py:127] INFO Configurations: Namespace(augment=0, batch_size=2, beta=0.999, cuda=True, datapath='/media/zliu/datagrid1/liu/kitti_stereo', dataset='KITTI', devices='0', flowDiv=1.0, initial_pretrain='none', logFile='logs/FFANet', loss='config/loss_config_disp.json', lr=0.001, manualSeed=1024, maxdisp=-1, model='FFANet', momentum=0.9, net='simplenet', outf='models_saved/FFANet', pretrain='none', save_logdir='experiments_logdir/FFANet', showFreq=100, startEpoch=0, startRound=0, test_batch=1, trainlist='filenames/kitti_filenames_with_parameters/kitti_mix_train_normal_pseudo_para.txt', trainmodel=None, use_deform=False, vallist='filenames/kitti_filenames_with_parameters/kitti_mix_val_normal_pseudo_para.txt', workers=8)
+2023-04-24 17:55:44,070 [train_ffanet.py:131] INFO Random Seed: 1024
+2023-04-24 17:55:44,117 [train_ffanet.py:33] INFO [[1.0, 0.8, 0.8, 0.6]]
+2023-04-24 17:55:44,122 [ffanet_trainer_kitti.py:84] INFO Use 4 processes to load data...
+2023-04-24 17:55:46,713 [ffanet_trainer_kitti.py:111] INFO Initial a new model...
+2023-04-24 17:55:46,722 [train_ffanet.py:57] INFO round 0: [1.0, 0.8, 0.8, 0.6]
+2023-04-24 17:55:46,722 [train_ffanet.py:58] INFO num of epoches: 500
+2023-04-24 17:55:46,722 [train_ffanet.py:59] INFO epoch	time_stamp	train_loss	train_EPE	EPE	lr
+2023-04-24 17:55:47,960 [ffanet_trainer_kitti.py:356] INFO Test: [0/20]	 Time 1.2355690002441406	 PSNR 5.53928279876709	 
+2023-04-24 17:55:53,080 [ffanet_trainer_kitti.py:356] INFO Test: [10/20]	 Time 0.5101277828216553	 PSNR 9.144635200500488	 
+2023-04-24 17:55:57,893 [ffanet_trainer_kitti.py:372] INFO  * PSNR meter 8.684
+2023-04-24 17:55:57,894 [ffanet_trainer_kitti.py:373] INFO  * avg inference time 0.204
+2023-04-24 17:55:57,901 [ffanet_trainer_kitti.py:190] INFO learning rate of epoch 0: 0.000200.
+2023-04-24 17:56:00,670 [ffanet_trainer_kitti.py:268] INFO this is round 0
+2023-04-24 17:56:00,671 [ffanet_trainer_kitti.py:279] INFO Epoch: [0][0/187]	Time 2.769 (2.769)	Data 0.294 (0.294)	Loss 0.252 (0.252)	PSNR 10.550 (10.550)	
+2023-04-24 17:56:15,106 [ffanet_trainer_kitti.py:268] INFO this is round 0
+2023-04-24 17:56:15,107 [ffanet_trainer_kitti.py:279] INFO Epoch: [0][10/187]	Time 1.432 (1.564)	Data 0.001 (0.028)	Loss 0.154 (0.247)	PSNR 14.432 (11.201)	
+2023-04-24 17:56:29,901 [ffanet_trainer_kitti.py:268] INFO this is round 0
+2023-04-24 17:56:29,902 [ffanet_trainer_kitti.py:279] INFO Epoch: [0][20/187]	Time 1.453 (1.524)	Data 0.001 (0.015)	Loss 0.132 (0.209)	PSNR 14.934 (12.424)	
+2023-04-24 17:56:35,420 [train_ffanet.py:127] INFO Configurations: Namespace(augment=0, batch_size=2, beta=0.999, cuda=True, datapath='/media/zliu/datagrid1/liu/kitti_stereo', dataset='KITTI', devices='0', flowDiv=1.0, initial_pretrain='none', logFile='logs/FFANet', loss='config/loss_config_disp.json', lr=0.001, manualSeed=1024, maxdisp=-1, model='FFANet', momentum=0.9, net='simplenet', outf='models_saved/FFANet', pretrain='none', save_logdir='experiments_logdir/FFANet', showFreq=100, startEpoch=0, startRound=0, test_batch=1, trainlist='filenames/kitti_filenames_with_parameters/kitti_mix_train_normal_pseudo_para.txt', trainmodel=None, use_deform=False, vallist='filenames/kitti_filenames_with_parameters/kitti_mix_val_normal_pseudo_para.txt', workers=8)
+2023-04-24 17:56:35,420 [train_ffanet.py:131] INFO Random Seed: 1024
+2023-04-24 17:56:35,461 [train_ffanet.py:33] INFO [[1.0, 0.8, 0.8, 0.6]]
+2023-04-24 17:56:35,466 [ffanet_trainer_kitti.py:84] INFO Use 4 processes to load data...
+2023-04-24 17:56:37,976 [ffanet_trainer_kitti.py:111] INFO Initial a new model...
+2023-04-24 17:56:37,985 [train_ffanet.py:57] INFO round 0: [1.0, 0.8, 0.8, 0.6]
+2023-04-24 17:56:37,985 [train_ffanet.py:58] INFO num of epoches: 500
+2023-04-24 17:56:37,985 [train_ffanet.py:59] INFO epoch	time_stamp	train_loss	train_EPE	EPE	lr
+2023-04-24 17:56:39,100 [ffanet_trainer_kitti.py:356] INFO Test: [0/20]	 Time 1.1126105785369873	 PSNR 6.380751132965088	 
+2023-04-24 17:56:44,283 [ffanet_trainer_kitti.py:356] INFO Test: [10/20]	 Time 0.516350507736206	 PSNR 11.402185440063477	 
+2023-04-24 17:56:48,983 [ffanet_trainer_kitti.py:372] INFO  * PSNR meter 11.189
+2023-04-24 17:56:48,984 [ffanet_trainer_kitti.py:373] INFO  * avg inference time 0.219
+2023-04-24 17:56:48,987 [ffanet_trainer_kitti.py:190] INFO learning rate of epoch 0: 0.000200.
+2023-04-24 17:56:51,767 [ffanet_trainer_kitti.py:268] INFO this is round 0
+2023-04-24 17:56:51,768 [ffanet_trainer_kitti.py:279] INFO Epoch: [0][0/187]	Time 2.780 (2.780)	Data 0.288 (0.288)	Loss 0.196 (0.196)	PSNR 12.226 (12.226)	
+2023-04-24 17:57:06,570 [ffanet_trainer_kitti.py:268] INFO this is round 0
+2023-04-24 17:57:06,570 [ffanet_trainer_kitti.py:279] INFO Epoch: [0][10/187]	Time 1.472 (1.598)	Data 0.001 (0.028)	Loss 0.175 (0.210)	PSNR 12.988 (11.849)	
+2023-04-24 17:57:21,426 [ffanet_trainer_kitti.py:268] INFO this is round 0
+2023-04-24 17:57:21,426 [ffanet_trainer_kitti.py:279] INFO Epoch: [0][20/187]	Time 1.446 (1.545)	Data 0.001 (0.024)	Loss 0.175 (0.189)	PSNR 13.376 (12.825)	
+2023-04-24 17:57:36,199 [ffanet_trainer_kitti.py:268] INFO this is round 0
+2023-04-24 17:57:36,199 [ffanet_trainer_kitti.py:279] INFO Epoch: [0][30/187]	Time 1.501 (1.523)	Data 0.001 (0.016)	Loss 0.126 (0.182)	PSNR 15.346 (13.040)	
+2023-04-24 17:57:51,042 [ffanet_trainer_kitti.py:268] INFO this is round 0
+2023-04-24 17:57:51,042 [ffanet_trainer_kitti.py:279] INFO Epoch: [0][40/187]	Time 1.484 (1.514)	Data 0.001 (0.013)	Loss 0.119 (0.179)	PSNR 16.782 (13.199)	

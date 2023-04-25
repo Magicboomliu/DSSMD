@@ -44,13 +44,13 @@ mkdir logs
 loss=config/loss_config_disp.json
 outf_model=models_saved/$pretrain_name
 logf=logs/$pretrain_name
-datapath=/media/zliu/datagrid1/liu/sceneflow
+datapath=/media/zliu/datagrid1/liu/kitti_stereo
 datathread=4
 lr=1e-3
 devices=0
-dataset=sceneflow
-trainlist=filenames/SceneFlow_Fog.list
-vallist=filenames/SceneFlow_Fog_Val.list
+dataset=KITTI
+trainlist=filenames/kitti_filenames_with_parameters/kitti_mix_train_normal_pseudo_para.txt
+vallist=filenames/kitti_filenames_with_parameters/kitti_mix_val_normal_pseudo_para.txt
 startR=0
 startE=0
 batchSize=2
@@ -113,5 +113,4 @@ CUDA_VISIBLE_DEVICES=0 python3 -m torch.distributed.launch --nproc_per_node=1  t
 }
 
 
-
-TRAINSF_FFANet_DDP
+TRAINSF_FFANet
