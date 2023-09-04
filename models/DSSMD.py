@@ -66,7 +66,6 @@ class DSSMMD(nn.Module):
         
         
         if self.dehaze_switch:
-            
             '''  Tranmission Estimation Branch       '''
             self.conv1_trans = conv(3,32,7,2) # 1/2
             self.conv2_trans = ResBlock(32,64,stride=2) # 1/4
@@ -102,8 +101,8 @@ class DSSMMD(nn.Module):
                 nn.Sigmoid())
             
             # Airlight estimation
-            self.conv1_air = conv(3,32,7,2) # 1/2
-            self.conv2_air = conv(32,48,kernel_size=3,stride=2,batchNorm=True) # 1/4
+            self.conv1_air = conv(3,64,7,2) # 1/2
+            self.conv2_air = conv(64,48,kernel_size=3,stride=2,batchNorm=True) # 1/4
             self.conv3_air = conv(48,32,kernel_size=3,stride=2,batchNorm=True) # 1/8
             self.conv4_air = conv(32,16,kernel_size=3,stride=1,batchNorm=True) # 1/16
             self.conv5_air = nn.Sequential(
@@ -112,7 +111,7 @@ class DSSMMD(nn.Module):
             )
         
 
-    
+
     def forward(self,haze_left,haze_right):
         
         haze_left = haze_left.float()
